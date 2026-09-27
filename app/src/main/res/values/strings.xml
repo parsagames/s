@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">دستیار اسنپ باکس</string>
+    <string name="start_button">شروع دستیار صوتی</string>
+    <string name="stop_button">پایان دستیار صوتی</string>
+    <string name="permission_hint">برای فعال‌سازی، باید در تنظیمات گوشی، دسترسی «Accessibility» را به این اپ بدهید.</string>
+</resources>
