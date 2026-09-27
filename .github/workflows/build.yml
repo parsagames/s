@@ -1,0 +1,39 @@
+name: Build APK
+
+# این workflow با هر push به شاخهٔ main/master، یا با اجرای دستی از تب Actions،
+# پروژه را روی سرورهای گیت‌هاب می‌سازد و فایل APK را به‌عنوان Artifact قابل‌دانلود می‌گذارد.
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout کد
+        uses: actions/checkout@v4
+
+      - name: نصب JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: نصب Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: نصب Gradle 8.7
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.7
+
+      - name: ساخت APK نسخهٔ Debug
+        run: gradle assembleDebug --no-daemon
+
+      - name: آپلود APK به‌عنوان Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapp-voice-assistant-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
