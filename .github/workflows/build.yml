@@ -2,6 +2,9 @@ name: Build APK
 
 # این workflow با هر push به شاخهٔ main/master، یا با اجرای دستی از تب Actions،
 # پروژه را روی سرورهای گیت‌هاب می‌سازد و فایل APK را به‌عنوان Artifact قابل‌دانلود می‌گذارد.
+#
+# نکته: عمداً هیچ مرحله‌ای برای «نصب Android SDK» نداریم — سرورهای ubuntu-latest گیت‌هاب
+# از قبل یک Android SDK کامل و به‌روز نصب‌شده دارند (ANDROID_HOME از قبل تنظیم است).
 
 on:
   push:
@@ -21,16 +24,17 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
-      - name: نصب Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: نصب Gradle 8.7
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 8.7
 
       - name: ساخت APK نسخهٔ Debug
-        run: gradle assembleDebug --no-daemon
+        env:
+          ANDROID_SDK_ROOT: ${{ env.ANDROID_HOME }}
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses || true
+          gradle assembleDebug --no-daemon
 
       - name: آپلود APK به‌عنوان Artifact
         uses: actions/upload-artifact@v4
